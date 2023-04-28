@@ -24,13 +24,13 @@ void setup()
 void loop()
 {   
     //正転
-    digitalWrite(SW1, HIGH);
-    delay(1);
     digitalWrite(SW2, LOW);
     delay(1);
-    digitalWrite(SW3, HIGH);
+    digitalWrite(SW3, LOW);
     delay(1);
-    digitalWrite(SW4, LOW);
+    digitalWrite(SW1, HIGH);
+    delay(1);
+    digitalWrite(SW4, HIGH);
     delay(2000);
 
     //停止
@@ -46,10 +46,10 @@ void loop()
     //逆転
     digitalWrite(SW1, LOW);
     delay(1);
+    digitalWrite(SW4, LOW);
+    delay(1);
     digitalWrite(SW2, HIGH);
     delay(1);
-    digitalWrite(SW3, LOW);
-    delay(1);
-    digitalWrite(SW4, HIGH);
+    digitalWrite(SW3, HIGH);
     delay(2000);
 }
