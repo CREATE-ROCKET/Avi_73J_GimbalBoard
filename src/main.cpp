@@ -1,55 +1,35 @@
 #include <Arduino.h>
+#include <driver/pcnt.h>
+#include <RotaryEncoder.h>
+#include <driver/ledc.h>
 
-#define SW1 23
-#define SW2 22
-#define SW3 21
-#define SW4 19
+#define IN1 18
+#define IN2 16
+#define PWM_FREQ 256
+#define PWM_CHANNEL0 0
+#define PWM_CHANNEL1 1
+#define PWM_RESOLUTION 8
 
-void setup()
-{
-    pinMode(SW1, OUTPUT);
-    digitalWrite(SW1, LOW);
-    delay(1);
-    pinMode(SW2, OUTPUT);
-    digitalWrite(SW2, LOW);
-    delay(1);
-    pinMode(SW3, OUTPUT);
-    digitalWrite(SW3, LOW);
-    delay(1);
-    pinMode(SW4, OUTPUT);
-    digitalWrite(SW4, LOW);
-    delay(1);
+void setup() {
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  ledcSetup(PWM_CHANNEL0, PWM_FREQ, PWM_RESOLUTION);
+  ledcAttachPin(IN1, PWM_CHANNEL0);
+  ledcSetup(PWM_CHANNEL1, PWM_FREQ, PWM_RESOLUTION);
+  ledcAttachPin(IN2, PWM_CHANNEL1);
 }
 
-void loop()
-{   
-    //正転
-    digitalWrite(SW2, LOW);
-    delay(1);
-    digitalWrite(SW3, LOW);
-    delay(1);
-    digitalWrite(SW1, HIGH);
-    delay(1);
-    digitalWrite(SW4, HIGH);
-    delay(2000);
-
-    //停止
-    digitalWrite(SW1, LOW);
-    delay(1);
-    digitalWrite(SW2, LOW);
-    delay(1);
-    digitalWrite(SW3, LOW);
-    delay(1);
-    digitalWrite(SW4, LOW);
-    delay(2000);
-
-    //逆転
-    digitalWrite(SW1, LOW);
-    delay(1);
-    digitalWrite(SW4, LOW);
-    delay(1);
-    digitalWrite(SW2, HIGH);
-    delay(1);
-    digitalWrite(SW3, HIGH);
-    delay(2000);
+void loop() {
+  ledcWrite(PWM_CHANNEL1, 256);
+  for (int i = 0; i < 256; i++)
+  {
+    ledcWrite(PWM_CHANNEL0, i);
+    delay(100);
+  }
+  
+  for(int i = 255; i >= 0; i--)
+  {
+    ledcWrite(PWM_CHANNEL1, i);
+    delay(100);
+  }
 }
