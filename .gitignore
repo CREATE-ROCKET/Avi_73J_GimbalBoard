@@ -10,6 +10,8 @@ src/*
 !src/main.cpp
 !src/main.h
 !src/README.md
+!src/encoder.h
+!src/motortest.h
 # ================================
 # CREATEのlibでないライブラリは以下のとおり下に書く
 # !lib/{{ライブラリ名}}
