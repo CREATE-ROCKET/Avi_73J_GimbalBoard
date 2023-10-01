@@ -34,7 +34,7 @@ class COUNTER {
    public:
     int16_t count = 0;
     void begin(int pinA, int pinB);
-    int getcount();
+    int16_t getcount();
 };
 void COUNTER::begin(int pinA, int pinB) {
     pcnt_config_A.pulse_gpio_num = pinA;        // 入力ピン(A)
@@ -64,13 +64,17 @@ void COUNTER::begin(int pinA, int pinB) {
     pcnt_counter_clear(PCNT_UNIT_0);
     pcnt_filter_disable(PCNT_UNIT_0);  // フィルターを無効化
     pcnt_counter_resume(PCNT_UNIT_0);  // カウント開始
+    pcnt_event_enable(PCNT_UNIT_0, PCNT_EVT_H_LIM);
+    pcnt_event_enable(PCNT_UNIT_0, PCNT_EVT_L_LIM);
+    pcnt_isr_register(caller, NULL, 0, &user_isr_handle);
+    pcnt_intr_enable(PCNT_UNIT_0);
 }
-int COUNTER::getcount() {
+int16_t COUNTER::getcount() {
     int16_t countrw;
-    int count;
+    // int count = 0;
     pcnt_get_counter_value(PCNT_UNIT_0, &countrw);
-    count = intr_count * INT16_MAX + count;
-    return count;
+    // count = intr_count * INT16_MAX + count;
+    return countrw;
 }
 
 class Systemid {
@@ -79,14 +83,14 @@ class Systemid {
     const double sampling_time = 0.001;
     hw_timer_t *timer = NULL;
     uint32_t last_time = 0;
-    float count;           // encoderのカウント値
-    float last_count = 0;  // 前回のカウント値
-    float omega;           // 角速度
-    float u;               // 入力電圧
-    float t = 0;           // 時間
-    float total_time = 0;  // 経過時間
-    float f = 0.1;         // 周波数
-    int16_t u_pwm = 0;     // 入力電圧のPWM値
+    int16_t count;           // encoderのカウント値
+    int16_t last_count = 0;  // 前回のカウント値
+    float omega;             // 角速度
+    float u;                 // 入力電圧
+    float t = 0;             // 時間
+    float total_time = 0;    // 経過時間
+    float f = 0.1;           // 周波数
+    int16_t u_pwm = 0;       // 入力電圧のPWM値
 
    public:
     IRAM_ATTR void begin();
@@ -111,14 +115,13 @@ void Systemid::begin() {
     timerAlarmWrite(timer, 1000, true);
     timerAlarmEnable(timer);
     encoder1.begin(4, 16);
-    
 }
 
 void Systemid::loop() {
     if (tickflag > 0) {
         tickflag = 0;
         count = encoder1.getcount();  // エンコーダのカウント値を取得
-        omega = calculate_omega();    // 角速度を計算
+        calculate_omega();            // 角速度を計算
         u = sin(2 * PI * f * t);      // 入力電圧を計算
         u_pwm = (int16_t)(u * 1023);  // 入力電圧をPWM値に変換
         t += sampling_time;           // 時間を更新
@@ -130,7 +133,7 @@ void Systemid::loop() {
             pwm1.setDuty(0);
             pwm2.setDuty(-u_pwm);
         }
-        Serial.printf("%f,%f,%f\n", total_time, u * 5, omega);
+        Serial.printf("%f,%f,%f,%d\n", total_time, u * 5, omega, count);
         if (t > 1 / f) {
             t = 0;
             if (f < 1)
@@ -151,7 +154,7 @@ void Systemid::loop() {
 }
 
 float Systemid::calculate_omega() {
-    float omega = (count - last_count) * 2 * PI / (float)(sampling_time * PULSE * GEAR);
+    omega = (count - last_count) * 2 * PI / (float)(sampling_time * PULSE * GEAR);
     last_count = count;
     return omega;
 }
