@@ -4,23 +4,27 @@
 #include <driver/pcnt.h>
 #include <soc/pcnt_struct.h>
 
-// static void IRAM_ATTR caller(void *arg);
-// int intr_count = 0;
-// pcnt_isr_handle_t user_isr_handle = NULL;
-
 class encoder {
    private:
     int intr_count = 0;
     pcnt_isr_handle_t user_isr_handle = NULL;
     pcnt_unit_t pcnt_unit;
+    static pcnt_unit_t next_pcnt_unit;
 
    public:
-    encoder(pcnt_unit_t unit) : pcnt_unit(unit) {}
+    encoder();
     void begin(int pinA, int pinB);
     int32_t getcount();
     static void IRAM_ATTR caller(void *arg);
     void processInterrupt();
 };
+
+pcnt_unit_t encoder::next_pcnt_unit = PCNT_UNIT_0;
+
+encoder::encoder() {
+    pcnt_unit = next_pcnt_unit;
+    next_pcnt_unit = static_cast<pcnt_unit_t>(static_cast<int>(next_pcnt_unit) + 1);
+}
 
 void encoder::begin(int pinA, int pinB) {
     pcnt_config_t pcnt_config_A = {
