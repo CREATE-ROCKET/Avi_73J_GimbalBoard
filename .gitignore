@@ -6,7 +6,7 @@
 platformio-device-monitor*.log
 lib/*
 !lib/README
-src/*
+# src/*
 !src/main.cpp
 !src/main.h
 !src/README.md
