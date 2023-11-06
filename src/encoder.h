@@ -23,7 +23,8 @@ pcnt_unit_t encoder::next_pcnt_unit = PCNT_UNIT_0;
 
 encoder::encoder() {
     pcnt_unit = next_pcnt_unit;
-    next_pcnt_unit = static_cast<pcnt_unit_t>(static_cast<int>(next_pcnt_unit) + 1);
+    next_pcnt_unit =
+        static_cast<pcnt_unit_t>(static_cast<int>(next_pcnt_unit) + 1);
 }
 
 void encoder::begin(int pinA, int pinB) {
@@ -40,10 +41,11 @@ void encoder::begin(int pinA, int pinB) {
         .channel = PCNT_CHANNEL_0,
     };
     pcnt_config_t pcnt_config_B = {
-        .pulse_gpio_num = pinB,           // ↓A相用のconfigで設定したのと入れ替える
-        .ctrl_gpio_num = pinA,            // ↑A相用のconfigで設定したのと入れ替える
-        .lctrl_mode = PCNT_MODE_REVERSE,  // ↓A相用のconfigで設定したのと入れ替える
-        .hctrl_mode = PCNT_MODE_KEEP,     // ↑A相用のconfigで設定したのと入れ替える
+        .pulse_gpio_num = pinB,  // ↓A相用のconfigで設定したのと入れ替える
+        .ctrl_gpio_num = pinA,  // ↑A相用のconfigで設定したのと入れ替える
+        .lctrl_mode =
+            PCNT_MODE_REVERSE,  // ↓A相用のconfigで設定したのと入れ替える
+        .hctrl_mode = PCNT_MODE_KEEP,  // ↑A相用のconfigで設定したのと入れ替える
         .pos_mode = PCNT_COUNT_INC,
         .neg_mode = PCNT_COUNT_DEC,
         .counter_h_lim = INT16_MAX,
@@ -55,8 +57,8 @@ void encoder::begin(int pinA, int pinB) {
     pcnt_unit_config(&pcnt_config_A);
     pcnt_counter_pause(pcnt_unit);
     pcnt_counter_clear(pcnt_unit);
-    pcnt_filter_disable(pcnt_unit);                // フィルターを無効化
-    pcnt_counter_resume(pcnt_unit);                // カウント開始
+    pcnt_filter_disable(pcnt_unit);  // フィルターを無効化
+    pcnt_counter_resume(pcnt_unit);  // カウント開始
     pcnt_event_enable(pcnt_unit, PCNT_EVT_H_LIM);  // イベントを有効化
     pcnt_event_enable(pcnt_unit, PCNT_EVT_L_LIM);  // イベントを有効化
     pcnt_isr_register(caller, this, 0,

@@ -37,13 +37,14 @@ class COUNTER {
     int16_t getcount();
 };
 void COUNTER::begin(int pinA, int pinB) {
-    pcnt_config_A.pulse_gpio_num = pinA;        // 入力ピン(A)
-    pcnt_config_A.ctrl_gpio_num = pinB;         // 制御ピン(B)
+    pcnt_config_A.pulse_gpio_num = pinA;  // 入力ピン(A)
+    pcnt_config_A.ctrl_gpio_num = pinB;   // 制御ピン(B)
     pcnt_config_A.lctrl_mode = PCNT_MODE_KEEP;  // 制御ピンがlowのときの振る舞い
     pcnt_config_A.hctrl_mode = PCNT_MODE_REVERSE;
     pcnt_config_A.channel = PCNT_CHANNEL_0;
     pcnt_config_A.unit = PCNT_UNIT_0;
-    pcnt_config_A.pos_mode = PCNT_COUNT_INC;  // 入力ピンが立ち上がり時の振る舞い
+    pcnt_config_A.pos_mode =
+        PCNT_COUNT_INC;  // 入力ピンが立ち上がり時の振る舞い
     pcnt_config_A.neg_mode = PCNT_COUNT_DEC;
     pcnt_config_A.counter_h_lim = INT16_MAX;
     pcnt_config_A.counter_l_lim = INT16_MIN;
@@ -54,7 +55,8 @@ void COUNTER::begin(int pinA, int pinB) {
     pcnt_config_B.hctrl_mode = PCNT_MODE_KEEP;
     pcnt_config_B.channel = PCNT_CHANNEL_1;
     pcnt_config_B.unit = PCNT_UNIT_0;
-    pcnt_config_B.pos_mode = PCNT_COUNT_INC;  // 入力ピンが立ち上がり時の振る舞い
+    pcnt_config_B.pos_mode =
+        PCNT_COUNT_INC;  // 入力ピンが立ち上がり時の振る舞い
     pcnt_config_B.neg_mode = PCNT_COUNT_DEC;
     pcnt_config_B.counter_h_lim = INT16_MAX;
     pcnt_config_B.counter_l_lim = INT16_MIN;
@@ -154,7 +156,8 @@ void Systemid::loop() {
 }
 
 float Systemid::calculate_omega() {
-    omega = (count - last_count) * 2 * PI / (float)(sampling_time * PULSE * GEAR);
+    omega =
+        (count - last_count) * 2 * PI / (float)(sampling_time * PULSE * GEAR);
     last_count = count;
     return omega;
 }
