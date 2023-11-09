@@ -12,7 +12,7 @@ class PWMWrapper {
     uint16_t maxDuty;
 
    public:
-    PWMWrapper(uint32_t f = 78125, uint8_t res = 10)
+    PWMWrapper(uint32_t f = 312500, uint8_t res = 8)
         : frequency(f), resolution(res), maxDuty((1 << res) - 1) {
         channel = nextChannel++;
     }

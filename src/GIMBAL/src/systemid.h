@@ -4,14 +4,12 @@
 #include <soc/pcnt_struct.h>
 
 #include "PWMwrapper.h"
+#include "gimbalpin.h"
 
 #define GEAR (32 * 33 * 35 * 38) / (float)(15 * 14 * 13 * 10)
 #undef PI
 #define PULSE 12.0
 #define PI 3.141592653589793f
-
-#define PWM1PIN 5
-#define PWM2PIN 18
 
 uint8_t tickflag = 0;
 
@@ -108,8 +106,8 @@ IRAM_ATTR void tick() { tickflag = 1; }
 
 void Systemid::begin() {
     Serial.begin(115200);
-    pwm1.begin(5);
-    pwm2.begin(17);
+    pwm1.begin(PIN::P_PWM_CW);
+    pwm2.begin(PIN::P_PWM_CCW);
     timer = timerBegin(0, 80, true);
     timerAttachInterrupt(timer, tick, true);
     delay(1000);

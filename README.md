@@ -5,6 +5,7 @@
 ### parts
 - roll motor https://www.pololu.com/product/2367
 - pitch motor https://www.pololu.com/product/2379
+- 
 ### cable
 1. motor+
 2. motor- 
@@ -15,3 +16,5 @@
 7. TX(gimbal=>camera)
 8. RX(camera=>gimbal)
 
+## memo
+17076, 259285
